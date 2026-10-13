@@ -1,23 +1,29 @@
-from itertools import permutations
+def tsp(graph, start):
+    n = len(graph)
+    visited = [start]
+    cost = 0
+    current = start
 
-cost = [
+    while len(visited) < n:
+        next_city = min(
+            (city for city in range(n) if city not in visited),
+            key=lambda city: graph[current][city]
+        )
+        cost += graph[current][next_city]
+        visited.append(next_city)
+        current = next_city
+
+    cost += graph[current][start]
+    visited.append(start)
+
+    print("Path:", visited)
+    print("Total Cost:", cost)
+
+graph = [
     [0, 10, 15, 20],
     [10, 0, 35, 25],
     [15, 35, 0, 30],
     [20, 25, 30, 0]
 ]
 
-n = len(cost)
-min_cost = float('inf')
-
-for path in permutations(range(1, n)):
-    route = (0,) + path + (0,)
-    total = sum(cost[route[i]][route[i+1]]
-                for i in range(n))
-
-    if total < min_cost:
-        min_cost = total
-        best_route = route
-
-print("Best Route:", best_route)
-print("Minimum Cost:", min_cost)
+tsp(graph, 0)
